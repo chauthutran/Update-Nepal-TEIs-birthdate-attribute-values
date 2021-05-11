@@ -1,7 +1,7 @@
 
 {
-    "version":"0.1"
-    ,"name":"Update Nepal TEIs Birthdate Attributes"
+    "version":"0.3"
+    ,"name":"DOB Update NP"
     ,"description":""
     ,"launch_path":"index.html"
     ,"installs_allowed_from":null
