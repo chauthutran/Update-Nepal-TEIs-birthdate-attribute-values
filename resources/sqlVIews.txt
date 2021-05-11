@@ -1,0 +1,21 @@
+
+select tei.uid
+
+FROM trackedentityinstance tei
+	inner join programinstance pginst on tei.trackedentityinstanceid = pginst.trackedentityinstanceid
+	inner join program pg on pg.programid = pginst.programid
+	
+WHERE pg.uid='A7SRy7lpk1x' 
+         and tei.organisationunitid in ( select ou.organisationunitid FROM organisationunit ou inner join _orgunitstructure _struct on ou.uid=_struct.organisationunituid where _struct.uidlevel3='G4bzdahEfGk' )
+
+
+          and ( select value from trackedentityattributevalue _teav
+				INNER JOIN trackedentityattribute _tea on _tea.trackedentityattributeid=_teav.trackedentityattributeid
+			where _teav.trackedentityinstanceid = tei.trackedentityinstanceid
+					and _tea.uid='JM9qqwDihBV' ) is not null
+
+and  ( select value from trackedentityattributevalue _teav
+				INNER JOIN trackedentityattribute _tea on _tea.trackedentityattributeid=_teav.trackedentityattributeid
+			where _teav.trackedentityinstanceid = tei.trackedentityinstanceid
+					and _tea.uid='wSp6Q7QDMsk' ) is null
+order by tei.created

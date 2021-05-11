@@ -1,0 +1,27 @@
+
+{
+    "version":"0.1"
+    ,"name":"Update Nepal TEIs Birthdate Attributes"
+    ,"description":""
+    ,"launch_path":"index.html"
+    ,"installs_allowed_from":null
+    ,"default_locale":"en"
+    ,"icons":{
+        "16":null
+        ,"48":"img/icons/icon.png"
+        ,"128":null
+    }
+    ,"developer":{
+        "url":""
+        ,"name":"Tran Chau"
+        ,"company":null
+        ,"email":null
+    }
+    ,"activities":{
+        "dhis":{
+            "href":"*"
+         }}
+    ,"folderName":null
+    ,"baseUrl":null
+    ,"launchUrl":null
+}
