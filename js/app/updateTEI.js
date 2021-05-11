@@ -12,6 +12,7 @@ function UpdateTEI()
     me.pageCount = 1;
 
     // For each page of SQLView
+    me.setupPageNumber;
     me.processingIdx = 0;
     me.totalInPage = 0;
 
@@ -37,8 +38,15 @@ function UpdateTEI()
     // ------------------------------------------------------------------------
     // HTML Element tags
 
+    me.pageNumberTag = $("#pageNumber");
     me.updateTEIBtnTag = $("#updateTEIBtn");
+    
+    me.pageInfoDivTag = $("#pageInfoDiv");
+    me.currentPageDivTag = $("#currentPageDiv");
+
     me.processingDivTag = $("#processingDiv");
+
+    
 
 
     // ------------------------------------------------------------------------
@@ -52,7 +60,30 @@ function UpdateTEI()
     me.setup_Events = function()
     {
         me.updateTEIBtnTag.click( function(){
-            me.loadAndUpdateTEIList();
+            me.processingDivTag.html("");
+            me.pageInfoDivTag.html("");
+            me.curPage = 0;
+            me.pageCount = 1;
+            me.setupPageNumber = undefined;
+            me.processingIdx = 0;
+            me.totalInPage = 0;
+
+            var pageNumber = me.pageNumberTag.val();
+            if( pageNumber == "" )
+            {
+                me.setupPageNumber = undefined;
+                me.loadAndUpdateTEIList();
+            } 
+            else if( me.isPositiveInteger( pageNumber ) )
+            {
+                me.setupPageNumber = eval( pageNumber );
+                me.loadAndUpdateTEIList();
+            }
+            else
+            {
+                me.processingDivTag.html("<p> The number of page should be a postive integer Or keep it empty.</p>");
+            }
+           
         });
     }
 
@@ -61,12 +92,20 @@ function UpdateTEI()
     // ------------------------------------------------------------------------
     // Load TEI List
 
+    me.isPositiveInteger = function(str) {
+        var n = Math.floor(Number(str));
+        return n !== Infinity && String(n) === str && n > 0;
+    }
+
     me.loadAndUpdateTEIList = function()
     {
-        if( me.curPage < me.pageCount )
+
+        if( ( me.setupPageNumber != undefined && me.curPage < me.setupPageNumber ) 
+           || ( me.setupPageNumber == undefined && me.curPage < me.pageCount ) )
         {
             me.curPage++;
-            me.processingDivTag.append("<p> Loading TEI list ... </p>");
+            me.processingDivTag.append("<p style='font-weight:bold;'> Loading TEI list in page " + me.curPage + " ... </p>");
+            me.currentPageDivTag.html( "Running page : " + me.curPage );
 
             $.ajax(
             {
@@ -74,12 +113,19 @@ function UpdateTEI()
                 ,url: me.QUERY_URL_TEI_LIST + me.curPage
                 ,contentType: "application/json;charset=utf-8" ,beforeSend: function( xhr ) 
                 {
-                    me.processingDivTag.append("<p Loading TEI list ... </p>");
+                    me.processingDivTag.append("<p Loading TEI list in page " + me.curPage + " ... </p>");
                 }
                 ,success: function( response ) 
                 {		
                     me.pageCount = response.pager.pageCount;
-                    // me.pageCount = 2;
+                    me.pageInfoDivTag.html("");
+                    me.pageInfoDivTag.append("<p>Total of pages : " + response.pager.pageCount + "</p" );
+                    me.pageInfoDivTag.append("<p>Total of clients : " + response.pager.total + "</p" );
+                    if( me.setupPageNumber != undefined && me.setupPageNumber > me.pageCount )
+                    {
+                        me.setupPageNumber = me.pageCount;
+                    }
+
                     me.updateTEIList( response.listGrid.rows );
                 }
                 ,error: function( )
@@ -90,6 +136,7 @@ function UpdateTEI()
         }
         else
         {
+            me.currentPageDivTag.html( "Running page : " + me.curPage + " ... DONE" );
             me.processingDivTag.append("<p>ALL TEI ARE UPDATED !</p>");
         }
        
