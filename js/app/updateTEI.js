@@ -78,8 +78,8 @@ function UpdateTEI()
                 }
                 ,success: function( response ) 
                 {		
-                    // me.pageCount = response.pager.pageCount;
-                    me.pageCount = 2;
+                    me.pageCount = response.pager.pageCount;
+                    // me.pageCount = 2;
                     me.updateTEIList( response.listGrid.rows );
                 }
                 ,error: function( )
